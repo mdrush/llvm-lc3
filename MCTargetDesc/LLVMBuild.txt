@@ -1,0 +1,6 @@
+[component_0]
+type = Library
+name = LC3Desc
+parent = LC3
+required_libraries = MC Support LC3AsmPrinter LC3Info
+add_to_library_groups = LC3

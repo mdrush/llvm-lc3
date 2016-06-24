@@ -1,0 +1,36 @@
+//===-- LC3RegisterInfo.td - LC3 Register defs ---------*- tablegen -*-===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+
+//===----------------------------------------------------------------------===//
+//  Declarations that describe the LC3 register file
+//===----------------------------------------------------------------------===/
+
+class LC3Reg<bits<16> Enc, string n> : Register<n> {
+  let HWEncoding = Enc;
+  let Namespace = "LC3";
+}
+
+
+let Namespace = "LC3" in {
+  def R0 : LC3Reg<0, "r0">;
+  def R1 : LC3Reg<1, "r1">;
+  def R2 : LC3Reg<2, "r2">;
+  def R3 : LC3Reg<3, "r3">;
+  def R4 : LC3Reg<4, "r4">;
+  def R5 : LC3Reg<5, "r5">;
+  def R6 : LC3Reg<6, "r6">;
+  def R7 : LC3Reg<7, "r7">;
+}
+
+def GRRegs : RegisterClass<"LC3", [i16], 16, 
+  (add R0, R1, R2, R3, R4, R5, 
+    R6, // stack pointer
+    R7  // return address
+  )>;
+

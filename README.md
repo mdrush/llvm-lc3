@@ -1,1 +1,3 @@
 # llvm-lc3
+
+Build with `-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=LC3`
