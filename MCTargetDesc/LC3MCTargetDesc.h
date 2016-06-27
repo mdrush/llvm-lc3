@@ -24,7 +24,8 @@ namespace llvm {
 	MCObjectWriter *createLC3ELFObjectWriter(raw_ostream &OS, uint8_t OSABI);
 } // End llvm namespace
 
-#define GET_REGINFO_TARGET_DESC
+//#define GET_REGINFO_TARGET_DESC
+#define GET_REGINFO_ENUM
 #include "LC3GenRegisterInfo.inc"
 
 #define GET_INSTRINFO_ENUM

@@ -16,7 +16,6 @@ class LC3Reg<bits<16> Enc, string n> : Register<n> {
   let Namespace = "LC3";
 }
 
-
 let Namespace = "LC3" in {
   def R0 : LC3Reg<0, "r0">;
   def R1 : LC3Reg<1, "r1">;

@@ -70,39 +70,39 @@ def LD : InstLC3<(outs GRRegs:$val), (ins memsrc:$addr),
  //   let Inst{8-0} = addr;
  // }
 
-def LDR : InstLC3<(outs GRRegs:$val), (ins GRRegs:$src1, i16imm:$imm),
-                    "ldr $val, $src1, $imm",
-                    [(set i16:$val, (load (add addr:$src1, addr:$imm)))]> {
-    bits<3> val;
-    bits<3> src1; //Base Register
-    bits<6> addr;
-    let Inst{15-12} = 0b0110;
-    let Inst{11-9} = val;
-    let Inst{8-6} = src1;
-    let Inst{5-0} = addr;
-  }
+// def LDR : InstLC3<(outs GRRegs:$val), (ins GRRegs:$src1, i16imm:$imm),
+//                     "ldr $val, $src1, $imm",
+//                     [(set i16:$val, (load (add addr:$src1, addr:$imm)))]> {
+//     bits<3> val;
+//     bits<3> src1; //Base Register
+//     bits<6> addr;
+//     let Inst{15-12} = 0b0110;
+//     let Inst{11-9} = val;
+//     let Inst{8-6} = src1;
+//     let Inst{5-0} = addr;
+//   }
 
-def STR : InstLC3<(outs GRRegs:$val), (ins GRRegs:$src1, i16imm:$imm),
-                    "str $val, $src1, $imm",
-                    [(store i16:$val, (add addr:$src1, addr:$imm))]> {
-    bits<3> val;
-    bits<3> src1; //Base Register
-    bits<6> addr;
-    let Inst{15-12} = 0b0110;
-    let Inst{11-9} = val;
-    let Inst{8-6} = src1;
-    let Inst{5-0} = addr;
-  }
+// def STR : InstLC3<(outs GRRegs:$val), (ins GRRegs:$src1, i16imm:$imm),
+//                     "str $val, $src1, $imm",
+//                     [(store i16:$val, (add addr:$src1, addr:$imm))]> {
+//     bits<3> val;
+//     bits<3> src1; //Base Register
+//     bits<6> addr;
+//     let Inst{15-12} = 0b0110;
+//     let Inst{11-9} = val;
+//     let Inst{8-6} = src1;
+//     let Inst{5-0} = addr;
+//   }
 
-def LDI : InstLC3<(outs GRRegs:$val), (ins memsrc:$addr),
-                  "ldi $val, $addr",
-                  [(set i16:$val, (load (load addr:$addr)))]> {
-    bits<3> val;
-    bits<9> addr;
-    let Inst{15-12} = 0b0010;
-    let Inst{11-9} = val;
-    let Inst{8-0} = addr;
-  }
+// def LDI : InstLC3<(outs GRRegs:$val), (ins memsrc:$addr),
+//                   "ldi $val, $addr",
+//                   [(set i16:$val, (load (load addr:$addr)))]> {
+//     bits<3> val;
+//     bits<9> addr;
+//     let Inst{15-12} = 0b0010;
+//     let Inst{11-9} = val;
+//     let Inst{8-0} = addr;
+//   }
 
 
 //===----------------------------------------------------------------------===//

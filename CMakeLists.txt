@@ -14,6 +14,7 @@ add_llvm_target(LC3CodeGen
 	LC3TargetMachine.cpp
 	LC3FrameLowering.cpp
 	LC3ISelDAGToDAG.cpp
+	LC3ISelLowering.cpp
 	)
 
 add_subdirectory(InstPrinter)

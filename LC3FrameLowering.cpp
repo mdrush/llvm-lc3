@@ -1,3 +1,6 @@
+#include "LC3FrameLowering.h"
+#include "LC3.h"
+#include "LC3InstrInfo.h"
 #include "llvm/CodeGen/MachineFrameInfo.h"
 #include "llvm/CodeGen/MachineFunction.h"
 #include "llvm/CodeGen/MachineInstrBuilder.h"
@@ -21,14 +24,14 @@ static unsigned materializeOffset(MachineFunction &MF, MachineBasicBlock &MBB, M
 		return 0;
 	}
 	else {
-		unsigned OffsetReg = TOY::R2;
+		unsigned OffsetReg = LC3::R2;
 		unsigned OffsetLo = (unsigned)(Offset & 0xffff);
 		unsigned OffsetHi = (unsigned)((Offset & 0xffff0000) >> 16);
-		BuildMI(MBB, MBBI, dl, TII.get(TOY::MOVLOi16), OffsetReg)
+		BuildMI(MBB, MBBI, dl, TII.get(LC3::MOVLOi16), OffsetReg)
 		.addImm(OffsetLo)
 		.setMIFlag(MachineInstr::FrameSetup);
 		if (OffsetHi) {
-			BuildMI(MBB, MBBI, dl, TII.get(TOY::MOVHIi16), OffsetReg)
+			BuildMI(MBB, MBBI, dl, TII.get(LC3::MOVHIi16), OffsetReg)
 			.addReg(OffsetReg)
 			.addImm(OffsetHi)
 			.setMIFlag(MachineInstr::FrameSetup);
@@ -53,22 +56,22 @@ void LC3FrameLowering::emitPrologue(MachineFunction &MF) const {
 	const TargetInstrInfo &TII = *MF.getSubtarget().getInstrInfo();
 	MachineBasicBlock &MBB = MF.front();
 	MachineBasicBlock::iterator MBBI = MBB.begin();
-	DebugLoc dl = MBBI != MBB.end() ? MBBI->getDebugLoc() :
-	DebugLoc();
+	DebugLoc dl = MBBI != MBB.end() ? MBBI->getDebugLoc() : DebugLoc();
 	uint64_t StackSize = computeStackSize(MF);
 	if (!StackSize) {
 		return;
 	}
-	unsigned StackReg = TOY::SP;
+
+	unsigned StackReg = LC3::R6;
 	unsigned OffsetReg = materializeOffset(MF, MBB, MBBI, (unsigned)StackSize);
 	if (OffsetReg) {
-		BuildMI(MBB, MBBI, dl, TII.get(TOY::SUBrr), StackReg)
+		BuildMI(MBB, MBBI, dl, TII.get(LC3::SUBrr), StackReg)
 		.addReg(StackReg)
 		.addReg(OffsetReg)
 		.setMIFlag(MachineInstr::FrameSetup);
 	} 
 	else {
-		BuildMI(MBB, MBBI, dl, TII.get(TOY::SUBri), StackReg)
+		BuildMI(MBB, MBBI, dl, TII.get(LC3::SUBri), StackReg)
 		.addReg(StackReg)
 		.addImm(StackSize)
 		.setMIFlag(MachineInstr::FrameSetup);
@@ -84,16 +87,16 @@ void LC3FrameLowering::emitEpilogue(MachineFunction &MF, MachineBasicBlock &MBB)
 	if (!StackSize) {
 		return;
 	}
-	unsigned StackReg = TOY::SP;
+	unsigned StackReg = LC3::R6;
 	unsigned OffsetReg = materializeOffset(MF, MBB, MBBI, (unsigned)StackSize);
 	if (OffsetReg) {
-		BuildMI(MBB, MBBI, dl, TII.get(TOY::ADDrr), StackReg)
+		BuildMI(MBB, MBBI, dl, TII.get(LC3::ADDrr), StackReg)
 		.addReg(StackReg)
 		.addReg(OffsetReg)
 		.setMIFlag(MachineInstr::FrameSetup);
 	}
 	else {
-		BuildMI(MBB, MBBI, dl, TII.get(TOY::ADDri), StackReg)
+		BuildMI(MBB, MBBI, dl, TII.get(LC3::ADDri), StackReg)
 		.addReg(StackReg)
 		.addImm(StackSize)
 		.setMIFlag(MachineInstr::FrameSetup);

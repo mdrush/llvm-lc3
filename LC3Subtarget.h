@@ -7,11 +7,16 @@
 #include "LC3InstrInfo.h"
 #include "LC3SelectionDAGInfo.h"
 #include "LC3Subtarget.h"
+#include <string>
+
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/Target/TargetSubtargetInfo.h"
 
 #define GET_SUBTARGETINFO_HEADER
 #include "LC3GenSubtargetInfo.inc"
+
+namespace llvm {
+class StringRef;
 
 class LC3Subtarget : public LC3GenSubtargetInfo {
 virtual void anchor();
@@ -23,7 +28,7 @@ virtual void anchor();
 	LC3FrameLowering FrameLowering;
 	InstrItineraryData InstrItins;
  public:
- 	LC3Subtarget(const std::string &TT, const std::string &CPU, const std::string &FS, LC3TargetMachine &TM);
+ 	LC3Subtarget(const Triple &TT, StringRef CPU, StringRef FS, LC3TargetMachine &TM);
 
  	const InstrItineraryData *getInstrItineraryData() const override {
 		return &InstrItins;
@@ -47,9 +52,10 @@ virtual void anchor();
 		return &TSInfo;
 	}
 
-	const DataLayout *getDataLayout() const override { return &DL; }
+	const DataLayout *getDataLayout() const { return &DL; }
 
 	void ParseSubtargetFeatures(StringRef CPU, StringRef FS);
 };
+}
 
 #endif
