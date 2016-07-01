@@ -1,3 +1,16 @@
+//===-- LC3RegisterInfo.h - LC3 Register Information Impl ---*- C++ -*-===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+//
+// This file contains the LC3 implementation of the MRegisterInfo class.
+//
+//===----------------------------------------------------------------------===//
+
 #ifndef LC3REGISTERINFO_H
 #define LC3REGISTERINFO_H
 
@@ -37,6 +50,6 @@ public:
   unsigned getFrameRegister(const MachineFunction &MF) const;
 };
 
-}
+} // end namespace llvm
 
 #endif

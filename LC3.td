@@ -1,4 +1,4 @@
-//===-- LC3.td - Describe the LC3 Target Machine -------*- tablegen -*-===//
+//===-- LC3.td - Describe the LC3 Target Machine -------*- tableGen -*-===//
 //
 //                     The LLVM Compiler Infrastructure
 //

@@ -1,3 +1,17 @@
+//===-- LC3FrameLowering.h - Frame info for LC3 Target ------*- C++ -*-===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+//
+// This file contains LC3 frame information that doesn't fit anywhere else
+// cleanly...
+//
+//===----------------------------------------------------------------------===//
+
 #ifndef LC3FRAMEINFO_H
 #define LC3FRAMEINFO_H
 
@@ -32,4 +46,5 @@ private:
 };
 }
 
-#endif
+#endif // LC3FRAMEINFO_H
+

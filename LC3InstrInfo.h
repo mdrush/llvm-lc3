@@ -1,3 +1,16 @@
+//===-- LC3InstrInfo.h - LC3 Instruction Information --------*- C++ -*-===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+//
+// This file contains the LC3 implementation of the TargetInstrInfo class.
+//
+//===----------------------------------------------------------------------===//
+
 #ifndef LC3INSTRUCTIONINFO_H
 #define LC3INSTRUCTIONINFO_H
 

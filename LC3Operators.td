@@ -11,14 +11,14 @@
 // Type profiles
 //===----------------------------------------------------------------------===//
 
-def MoveImm16Ty : SDTypeProfile<1, 1, [
+def MoveImm32Ty : SDTypeProfile<1, 1, [
   SDTCisSameAs<0, 1>, SDTCisInt<0>
 ]>;
 
-def SDT_LC3CallSeqStart : SDCallSeqStart<[ SDTCisVT<0, i16> ]>;
+def SDT_LC3CallSeqStart : SDCallSeqStart<[ SDTCisVT<0, i32> ]>;
 
 def SDT_LC3CallSeqEnd   : SDCallSeqEnd<[
-  SDTCisVT<0, i16>, SDTCisVT<1, i16>
+  SDTCisVT<0, i32>, SDTCisVT<1, i32>
 ]>;
 
 def LC3RetFlag    : SDNode<"LC3ISD::RET_FLAG", SDTNone,
@@ -30,26 +30,23 @@ def callseq_end   : SDNode<"ISD::CALLSEQ_END",   SDT_LC3CallSeqEnd,
 
 def SDT_LC3Call    : SDTypeProfile<0, -1, [SDTCisPtrTy<0>]>;
 
-
 //===----------------------------------------------------------------------===//
 // Custom SDNodes.
 //===----------------------------------------------------------------------===//
 
-//def load_sym : SDNode<"LC3ISD::LOAD_SYM", SDTIntUnaryOp>;
+def load_sym : SDNode<"LC3ISD::LOAD_SYM", SDTIntUnaryOp>;
 
-//def movei32 : SDNode<"LC3ISD::MOVEi32", MoveImm32Ty>;
+def movei32 : SDNode<"LC3ISD::MOVEi32", MoveImm32Ty>;
 
-// def lc3_call
-//     : SDNode<"LC3ISD::CALL", SDT_LC3Call,
-//              [ SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic ]>;
-
-
+def lc3_call
+    : SDNode<"LC3ISD::CALL", SDT_LC3Call,
+             [ SDNPHasChain, SDNPOptInGlue, SDNPOutGlue, SDNPVariadic ]>;
 
 //===----------------------------------------------------------------------===//
 // Operand Definitions.
 //===----------------------------------------------------------------------===//
 
-def bl_target : Operand<i16>;
+def bl_target : Operand<i32>;
 
 def b_target : Operand<OtherVT>;
 
@@ -57,24 +54,23 @@ def cc_val : Operand<i32> {
   let PrintMethod = "printCondCode";
 }
 
-def memsrc : Operand<i16> {
-  let MIOperandInfo = (ops GRRegs, i16imm);
+def memsrc : Operand<i32> {
+  let MIOperandInfo = (ops GRRegs, i32imm);
   let PrintMethod = "printAddrModeMemSrc";
   let EncoderMethod = "getMemSrcValue";
 }
 
-// def i32imm_lo : Operand<i32>, ImmLeaf<i32, [{
-//   return Imm >= 0 && Imm < 65536;
-// }]>;
-
-def LC3imm5 : Operand<i16>, ImmLeaf<i16, [{
-  return Imm >= 0 && Imm < 32;
+def i32imm_lo : Operand<i32>, ImmLeaf<i32, [{
+  return Imm >= 0 && Imm < 65536;
 }]>;
 
-
+def LC3imm8 : Operand<i32>, ImmLeaf<i32, [{
+  return Imm >= 0 && Imm < 256;
+}]>;
 
 //===----------------------------------------------------------------------===//
 // Complex Pattern Definitions.
 //===----------------------------------------------------------------------===//
 
 def addr : ComplexPattern<iPTR, 2, "SelectAddr", [], []>;
+

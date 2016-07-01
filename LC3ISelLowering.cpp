@@ -1,3 +1,16 @@
+//===-- LC3ISelLowering.cpp - LC3 DAG Lowering Implementation ---------===//
+//
+//                     The LLVM Compiler Infrastructure
+//
+// This file is distributed under the University of Illinois Open Source
+// License. See LICENSE.TXT for details.
+//
+//===----------------------------------------------------------------------===//
+//
+// This file implements the LC3TargetLowering class.
+//
+//===----------------------------------------------------------------------===//
+
 #include "LC3ISelLowering.h"
 #include "LC3.h"
 #include "LC3MachineFunctionInfo.h"
