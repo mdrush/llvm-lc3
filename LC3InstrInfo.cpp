@@ -47,7 +47,7 @@ LC3InstrInfo::LC3InstrInfo()
 /// any side effects other than loading from the stack slot.
 unsigned
 LC3InstrInfo::isLoadFromStackSlot(const MachineInstr *MI, int &FrameIndex) const{
-  assert(0 && "Unimplemented");
+  //assert(0 && "Unimplemented");
   return 0;
 }
   
@@ -59,7 +59,7 @@ LC3InstrInfo::isLoadFromStackSlot(const MachineInstr *MI, int &FrameIndex) const
 unsigned
 LC3InstrInfo::isStoreToStackSlot(const MachineInstr *MI,
                                    int &FrameIndex) const {
-  assert(0 && "Unimplemented");
+  //assert(0 && "Unimplemented");
   return 0;
 }
 

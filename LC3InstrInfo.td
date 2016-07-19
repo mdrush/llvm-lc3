@@ -128,20 +128,20 @@ def MUL  : MulInst<0b0000000, (outs GRRegs:$dst),
   let Inst{3-0}   = src1;
 }
 
-def MLA  : MulInst<0b0000001, (outs GRRegs:$dst),
-                   (ins GRRegs:$src1, GRRegs:$src2, GRRegs:$src3),
-                   "mla $dst, $src1, $src2, $src3",
-                   [(set i32:$dst, (add (mul i32:$src1, i32:$src2),
-                                         i32:$src3))]> {
-  bits<4> dst;
-  bits<4> src1;
-  bits<4> src2;
-  bits<4> src3;
-  let Inst{19-16} = dst;
-  let Inst{15-12} = src3;
-  let Inst{11-8}  = src2;
-  let Inst{3-0}   = src1;
-}
+//def MLA  : MulInst<0b0000001, (outs GRRegs:$dst),
+//                   (ins GRRegs:$src1, GRRegs:$src2, GRRegs:$src3),
+//                   "mla $dst, $src1, $src2, $src3",
+//                   [(set i32:$dst, (add (mul i32:$src1, i32:$src2),
+//                                         i32:$src3))]> {
+//  bits<4> dst;
+//  bits<4> src1;
+//  bits<4> src2;
+//  bits<4> src3;
+//  let Inst{19-16} = dst;
+//  let Inst{15-12} = src3;
+//  let Inst{11-8}  = src2;
+//  let Inst{3-0}   = src1;
+//}
 
 //===----------------------------------------------------------------------===//
 // Mov Instructions
@@ -149,7 +149,7 @@ def MLA  : MulInst<0b0000001, (outs GRRegs:$dst),
 def MOVrr  : ALUInst<0b1101, (outs GRRegs:$dst), (ins GRRegs:$src),
                      "mov $dst, $src",
                      [/* No pattern */]> {
-  bits<4> dst;
+  bits<4> dst; 
   bits<4> src;
   let Inst{25-27} = 0b000;  
   let Inst{20} = 0;
@@ -175,7 +175,7 @@ class MOV<bits<4> opcode, string opstr, dag ins, list<dag>pattern>
   let Inst{25} = 1;
 }
 
-def MOVLOi16 : MOV<0b1000, "movw", (ins i32imm:$imm),
+def MOVLOi16 : MOV<0b1000, "mov", (ins i32imm:$imm),
                   [(set i32:$dst, i32imm_lo:$imm)]>;
 def MOVHIi16 : MOV<0b1010, "movt", (ins GRRegs:$src1, i32imm:$imm),
                   [/* No Pattern */]>;
@@ -246,7 +246,7 @@ def STR : InstLC3<(outs), (ins GRRegs:$val, memsrc:$addr),
 
 let isTerminator = 1, isReturn = 1, isBarrier = 1, Uses = [LR] in {
   def RET : InstLC3<(outs), (ins variable_ops),
-                    "bx lr",  [(LC3RetFlag)]> {
+                    "ret",  [(LC3RetFlag)]> {
     let Inst{27-0}  = 0b0001001011111111111100011110;
   }
 }
@@ -274,7 +274,7 @@ def : Pattern<(i32 (load_sym tglobaladdr:$addr)),  [(MOVi32 $addr)]>;
 
 let isTerminator = 1, isBranch = 1, isBarrier = 1 in {
   def B : InstLC3<(outs), (ins b_target:$dst),
-                  "b $dst", [(br bb:$dst)]> {
+                  "jmp $dst", [(br bb:$dst)]> {
     bits<24> dst;
     let Inst{31-28} = 0b0000;
     let Inst{27-24} = 0b1010;

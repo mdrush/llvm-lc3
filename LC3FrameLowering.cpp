@@ -116,9 +116,9 @@ void LC3FrameLowering::emitPrologue(MachineFunction &MF,
         .addReg(OffsetReg)
         .setMIFlag(MachineInstr::FrameSetup);
   } else {
-    BuildMI(MBB, MBBI, dl, TII.get(LC3::SUBri), StackReg)
+    BuildMI(MBB, MBBI, dl, TII.get(LC3::ADDri), StackReg)
         .addReg(StackReg)
-        .addImm(StackSize)
+        .addImm(-StackSize)
         .setMIFlag(MachineInstr::FrameSetup);
   }
 }

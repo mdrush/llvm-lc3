@@ -16,12 +16,12 @@ void LC3MCAsmInfo::anchor() {}
 LC3MCAsmInfo::LC3MCAsmInfo(const Triple &TT) {
   SupportsDebugInformation = true;
   Data16bitsDirective = "\t.short\t";
-  Data32bitsDirective = "\t.long\t";
+  Data32bitsDirective = "\t.fill\t";
   Data64bitsDirective = 0;
   ZeroDirective = "\t.space\t";
   CommentString = "#";
 
-  AscizDirective = ".asciiz";
+  AscizDirective = ".stringz";
 
   HiddenVisibilityAttr = MCSA_Invalid;
   HiddenDeclarationVisibilityAttr = MCSA_Invalid;
