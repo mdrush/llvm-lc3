@@ -129,7 +129,7 @@ SDNode *LC3DAGToDAGISel::Select(SDNode *N) {
   return SelectCode(N);
 }
 
-/// createLC3ISelDag - This pass converts a LC3alized DAG into a
+/// createLC3ISelDag - This pass converts a Legalized DAG into a
 /// LC3-specific DAG, ready for instruction scheduling.
 ///
 FunctionPass *llvm::createLC3ISelDag(LC3TargetMachine &TM,

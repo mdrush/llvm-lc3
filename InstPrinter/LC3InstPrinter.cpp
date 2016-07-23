@@ -92,17 +92,17 @@ const char * condCodeToString(ISD::CondCode CC) {
   
   // Don't care operations: undefined if the input is a nan.
   case ISD::SETEQ:         //  1 X 0 0 1       True if equal
-    return "eq";
+    return "z";
   case ISD::SETGT:         //  1 X 0 1 0       True if greater than
-    return "gt";
+    return "p";
   case ISD::SETGE:         //  1 X 0 1 1       True if greater than or equal
-    return "ge";
+    return "zp";
   case ISD::SETLT:         //  1 X 1 0 0       True if less than
-    return "lt";
+    return "n";
   case ISD::SETLE:         //  1 X 1 0 1       True if less than or equal
-    return "le";
+    return "nz";
   case ISD::SETNE:         //  1 X 1 1 0       True if not equal
-    return "ne";
+    return "np";
   }
 }
 

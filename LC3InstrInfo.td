@@ -86,6 +86,7 @@ defm ADD  : BinOp<0b0100, "add", add>;
 def SUBrr : InstLC3<(outs GRRegs:$dst), (ins GRRegs:$src1, GRRegs:$src2), "",
                      [(set i32:$dst, (sub i32:$src1, i32:$src2))]> {
   let isPseudo = 1;
+  //let Defs = [CPSR];
 }
 
 def SUBri : InstLC3<(outs GRRegs:$dst), (ins GRRegs:$src1, i32imm:$imm), 
@@ -101,7 +102,18 @@ def SUBri : InstLC3<(outs GRRegs:$dst), (ins GRRegs:$src1, i32imm:$imm),
     let Inst{11-0}  = imm;
 }
 
-
+def NOTrr : InstLC3<(outs GRRegs:$dst), (ins GRRegs:$src1),
+                     !strconcat("not", " $dst, $src1"),
+                     [(set i32:$dst, (not i32:$src1))]> {
+    bits<4> dst;
+    bits<4> src1;
+    bits<12> imm;
+    let Inst{25} = 1;
+    let Inst{20} = 0;  // We never update flags
+    let Inst{19-16} = dst;
+    let Inst{15-12} = src1;
+    let Inst{11-0}  = imm;
+}
 
 defm AND  : BinOp<0b0000, "and", and>;
 defm EOR  : BinOp<0b0001, "eor", xor>;
@@ -201,6 +213,7 @@ def CMP : InstLC3<(outs), (ins GRRegs:$lhs, GRRegs:$rhs),
   let Inst{4} = 0b0;
   let Inst{3-0} = rhs;
   
+  let isPseudo = 1;
   let Defs = [CPSR];
 }
 
@@ -244,7 +257,7 @@ def STR : InstLC3<(outs), (ins GRRegs:$val, memsrc:$addr),
 // Return Instructions
 //===----------------------------------------------------------------------===//
 
-let isTerminator = 1, isReturn = 1, isBarrier = 1, Uses = [LR] in {
+let isTerminator = 1, isReturn = 1, Uses = [LR] in {
   def RET : InstLC3<(outs), (ins variable_ops),
                     "ret",  [(LC3RetFlag)]> {
     let Inst{27-0}  = 0b0001001011111111111100011110;
@@ -258,7 +271,7 @@ let isTerminator = 1, isReturn = 1, isBarrier = 1, Uses = [LR] in {
 
 let isCall = 1, Defs = [LR], Uses = [SP] in {
   def BL : BranchInst<0b1011, (outs), (ins GRRegs:$addr),
-                      "bl $addr",
+                      "jsrr $addr",
                       [(lc3_call i32:$addr)]> {
     bits<4> addr;
     let Inst{31-28} = 0b1110;
@@ -274,7 +287,7 @@ def : Pattern<(i32 (load_sym tglobaladdr:$addr)),  [(MOVi32 $addr)]>;
 
 let isTerminator = 1, isBranch = 1, isBarrier = 1 in {
   def B : InstLC3<(outs), (ins b_target:$dst),
-                  "jmp $dst", [(br bb:$dst)]> {
+                  "brnzp $dst", [(br bb:$dst)]> {
     bits<24> dst;
     let Inst{31-28} = 0b0000;
     let Inst{27-24} = 0b1010;
@@ -284,7 +297,7 @@ let isTerminator = 1, isBranch = 1, isBarrier = 1 in {
 
 let isTerminator = 1, isBranch = 1, Uses = [CPSR] in {
   def Bcc : InstLC3<(outs), (ins cc_val:$cc, b_target:$dst),
-                    "b$cc $dst",  []> {
+                    "br$cc $dst",  []> {
   }
 }
 

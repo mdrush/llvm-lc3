@@ -19,9 +19,9 @@ LC3MCAsmInfo::LC3MCAsmInfo(const Triple &TT) {
   Data32bitsDirective = "\t.fill\t";
   Data64bitsDirective = 0;
   ZeroDirective = "\t.space\t";
-  CommentString = "#";
+  CommentString = ";";
 
-  AscizDirective = ".stringz";
+  AscizDirective = ".stringz\t";
 
   HiddenVisibilityAttr = MCSA_Invalid;
   HiddenDeclarationVisibilityAttr = MCSA_Invalid;

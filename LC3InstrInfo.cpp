@@ -26,6 +26,7 @@
 #include "llvm/Support/Debug.h"
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/TargetRegistry.h"
+#include "llvm/CodeGen/RegisterScavenging.h"
 
 #define GET_INSTRINFO_CTOR_DTOR
 #include "LC3GenInstrInfo.inc"
@@ -174,7 +175,6 @@ void LC3InstrInfo::copyPhysReg(MachineBasicBlock &MBB,
                                  unsigned DestReg, unsigned SrcReg,
                                  bool KillSrc) const {
   BuildMI(MBB, I, I->getDebugLoc(), get(LC3::ADDrr), DestReg)
-      .addReg(DestReg)
       .addReg(SrcReg, getKillRegState(KillSrc))
       .addImm(0);
 
@@ -248,14 +248,43 @@ bool LC3InstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MI) const
     const unsigned Src2Reg = MI->getOperand(2).getReg();
 
     /** LC3 HAS LC3::NOT**/
-    BuildMI(MBB, MI, DL, get(LC3::EORrr))
+    BuildMI(MBB, MI, DL, get(LC3::NOTrr))
       .addReg(DstReg)
-      .addReg(Src2Reg)
-      .addImm(31);
+      .addReg(Src1Reg);
+    BuildMI(MBB, MI, DL, get(LC3::ADDri))
+      .addReg(DstReg)
+      .addReg(DstReg)
+      .addImm(1);
     BuildMI(MBB, MI, DL, get(LC3::ADDrr))
       .addReg(DstReg, RegState::Define | getDeadRegState(DstIsDead))
-      .addReg(Src1Reg)
+      .addReg(DstReg)
+      .addReg(Src2Reg);
+
+    MBB.erase(MI);
+    return true;
+  }
+  case LC3::CMP: {
+    DebugLoc DL = MI->getDebugLoc();
+    MachineBasicBlock &MBB = *MI->getParent();
+
+    RegScavenger rs;
+    rs.enterBasicBlock(&MBB);
+
+    const unsigned lhs = MI->getOperand(0).getReg();
+    const unsigned rhs = MI->getOperand(1).getReg();
+    const unsigned temp = rs.RegScavenger::scavengeRegister(&LC3::GRRegsRegClass, *MI, 4);
+
+    BuildMI(MBB, MI, DL, get(LC3::NOTrr))
+      .addReg(temp)
+      .addReg(lhs);
+    BuildMI(MBB, MI, DL, get(LC3::ADDri))
+      .addReg(temp)
+      .addReg(temp)
       .addImm(1);
+    BuildMI(MBB, MI, DL, get(LC3::ADDrr))
+      .addReg(temp)
+      .addReg(temp)
+      .addReg(rhs);
 
     MBB.erase(MI);
     return true;
