@@ -43,7 +43,7 @@ public:
 
   ~LC3MCCodeEmitter() {}
 
-  // getBinaryCodeForInstr - Tablc3en'erated function for getting the
+  // getBinaryCodeForInstr - Tablegen'erated function for getting the
   // binary encoding for an instruction.
   uint64_t getBinaryCodeForInstr(const MCInst &MI,
                                  SmallVectorImpl<MCFixup> &Fixups,
@@ -142,7 +142,7 @@ void LC3MCCodeEmitter::encodeInstruction(const MCInst &MI, raw_ostream &OS,
                                          SmallVectorImpl<MCFixup> &Fixups,
                                          const MCSubtargetInfo &STI) const {
   const MCInstrDesc &Desc = MCII.get(MI.getOpcode());
-  if (Desc.getSize() != 4) {
+  if (Desc.getSize() != 2) {
     llvm_unreachable("Unexpected instruction size!");
   }
 

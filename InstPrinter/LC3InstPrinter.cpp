@@ -125,7 +125,7 @@ void LC3InstPrinter::printAddrModeMemSrc(const MCInst *MI, unsigned OpNum,
 
   unsigned Offset = Op2.getImm();
   //if (Offset) {
-    O << ", #" << Offset;
+    O << ", #" << (Offset / 2);
   //}
   //O << "]";
 }
@@ -139,8 +139,8 @@ void LC3InstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
   }
 
   if (Op.isImm()) {
-    if (getOpcodeName(MI->getOpcode()) == "MOVLOi16" || 
-        getOpcodeName(MI->getOpcode()) == "MOVHIi16")
+    if (getOpcodeName(MI->getOpcode()) == "MOVLOi8" || 
+        getOpcodeName(MI->getOpcode()) == "MOVHIi8")
       O << "=" << MCInstPrinter::formatHex(Op.getImm());
     else
       O << "#" << Op.getImm();

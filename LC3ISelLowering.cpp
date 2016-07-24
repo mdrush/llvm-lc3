@@ -44,7 +44,7 @@ const char *LC3TargetLowering::getTargetNodeName(unsigned Opcode) const {
     return NULL;
   case LC3ISD::RET_FLAG: return "RetFlag";
   case LC3ISD::LOAD_SYM: return "LOAD_SYM";
-  case LC3ISD::MOVEi32:  return "MOVEi32";
+  case LC3ISD::MOVEi16:  return "MOVEi16";
   case LC3ISD::CALL:     return "CALL";
   }
 }
@@ -52,7 +52,7 @@ const char *LC3TargetLowering::getTargetNodeName(unsigned Opcode) const {
 LC3TargetLowering::LC3TargetLowering(LC3TargetMachine &LC3TM)
     : TargetLowering(LC3TM), Subtarget(*LC3TM.getSubtargetImpl()) {
   // Set up the register classes.
-  addRegisterClass(MVT::i32, &LC3::GRRegsRegClass);
+  addRegisterClass(MVT::i16, &LC3::GRRegsRegClass);
 
   // Compute derived properties from the register classes
   computeRegisterProperties(Subtarget.getRegisterInfo());
@@ -62,7 +62,9 @@ LC3TargetLowering::LC3TargetLowering(LC3TargetMachine &LC3TM)
   setSchedulingPreference(Sched::Source);
 
   // Nodes that require custom lowering
-  setOperationAction(ISD::GlobalAddress, MVT::i32, Custom);
+  setOperationAction(ISD::GlobalAddress, MVT::i16, Custom);
+  setOperationAction(ISD::BRCOND, MVT::i16, Expand);
+
 }
 
 SDValue LC3TargetLowering::LowerOperation(SDValue Op, SelectionDAG &DAG) const {
@@ -79,7 +81,7 @@ SDValue LC3TargetLowering::LowerGlobalAddress(SDValue Op, SelectionDAG& DAG) con
   EVT VT = Op.getValueType();
   GlobalAddressSDNode *GlobalAddr = cast<GlobalAddressSDNode>(Op.getNode());
   SDValue TargetAddr =
-      DAG.getTargetGlobalAddress(GlobalAddr->getGlobal(), Op, MVT::i32);
+      DAG.getTargetGlobalAddress(GlobalAddr->getGlobal(), Op, MVT::i16);
   return DAG.getNode(LC3ISD::LOAD_SYM, Op, VT, TargetAddr);
 }
 
@@ -144,9 +146,9 @@ SDValue LC3TargetLowering::LowerCall(TargetLowering::CallLoweringInfo &CLI,
     assert(VA.isMemLoc() &&
            "Only support passing arguments through registers or via the stack");
 
-    SDValue StackPtr = DAG.getRegister(LC3::SP, MVT::i32);
+    SDValue StackPtr = DAG.getRegister(LC3::SP, MVT::i16);
     SDValue PtrOff = DAG.getIntPtrConstant(VA.getLocMemOffset(), Loc);
-    PtrOff = DAG.getNode(ISD::ADD, Loc, MVT::i32, StackPtr, PtrOff);
+    PtrOff = DAG.getNode(ISD::ADD, Loc, MVT::i16, StackPtr, PtrOff);
     MemOpChains.push_back(DAG.getStore(Chain, Loc, Arg, PtrOff,
                                        MachinePointerInfo(), false, false, 0));
   }
@@ -260,8 +262,8 @@ SDValue LC3TargetLowering::LowerFormalArguments(
     if (VA.isRegLoc()) {
       // Arguments passed in registers
       EVT RegVT = VA.getLocVT();
-      assert(RegVT.getSimpleVT().SimpleTy == MVT::i32 &&
-             "Only support MVT::i32 register passing");
+      assert(RegVT.getSimpleVT().SimpleTy == MVT::i16 &&
+             "Only support MVT::i16 register passing");
       const unsigned VReg = RegInfo.createVirtualRegister(&LC3::GRRegsRegClass);
       RegInfo.addLiveIn(VA.getLocReg(), VReg);
       SDValue ArgIn = DAG.getCopyFromReg(Chain, dl, VReg, RegVT);
@@ -279,8 +281,8 @@ SDValue LC3TargetLowering::LowerFormalArguments(
     EVT PtrTy = getPointerTy(DAG.getDataLayout());
     SDValue FIPtr = DAG.getFrameIndex(FI, PtrTy);
 
-    assert(VA.getValVT() == MVT::i32 &&
-           "Only support passing arguments as i32");
+    assert(VA.getValVT() == MVT::i16 &&
+           "Only support passing arguments as i16");
     SDValue Load = DAG.getLoad(VA.getValVT(), dl, Chain, FIPtr,
                                MachinePointerInfo(), false, false, false, 0);
 

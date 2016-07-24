@@ -71,10 +71,10 @@ MCOperand LC3MCInstLower::LowerSymbolOperand(const MachineOperand &MO,
   switch (Option) {
     default:
       break;
-    case LC3II::MO_LO16:
+    case LC3II::MO_LO8:
       Kind = MCSymbolRefExpr::VK_LC3_LO;
       break;
-    case LC3II::MO_HI16:
+    case LC3II::MO_HI8:
       Kind = MCSymbolRefExpr::VK_LC3_HI;
       break;
   }

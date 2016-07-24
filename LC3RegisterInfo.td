@@ -35,7 +35,7 @@ def CPSR  : LC3Reg<16, "cpsr">;
 
 // Register classes.
 //
-def GRRegs : RegisterClass<"LC3", [i32], 32,
+def GRRegs : RegisterClass<"LC3", [i16], 16,
   // Return values and arguments
   (add R0, R1, R2, R3,
        R4, R5, R6, R7, R8, R9, SP)>;

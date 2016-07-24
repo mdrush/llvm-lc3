@@ -36,11 +36,11 @@ namespace LC3II {
 
     /// MO_LO16 - On a symbol operand, this represents a relocation containing
     /// lower 16 bit of the address. Used only via movw instruction.
-    MO_LO16 = 0x1,
+    MO_LO8 = 0x1,
 
     /// MO_HI16 - On a symbol operand, this represents a relocation containing
     /// higher 16 bit of the address. Used only via movt instruction.
-    MO_HI16 = 0x2,
+    MO_HI8 = 0x2,
 
     /// MO_OPTION_MASK - Most flags are mutually exclusive; this mask selects
     /// just that part of the flag set.

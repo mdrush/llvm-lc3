@@ -28,7 +28,7 @@ static std::string computeDataLayout(const Triple &TT, StringRef CPU,
                                      const TargetOptions &Options) {
   // XXX Build the triple from the arguments.
   // This is hard-coded for now for this example target.
-  return "e-m:e-p:32:32-i1:8:32-i8:8:32-i16:16:32-i64:32-f64:32-a:0:32-n32";
+  return "e-m:e-p:16:16:16-i1:16:16-i8:8:8-i16:16:16-i32:32:32-f64:64:64-a:0:16-n16";
 }
 
 LC3TargetMachine::LC3TargetMachine(const Target &T, const Triple &TT,

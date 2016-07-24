@@ -208,7 +208,7 @@ bool LC3InstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MI) const
   {
   default:
     return false;
-  case LC3::MOVi32: {
+  case LC3::MOVi16: {
     DebugLoc DL = MI->getDebugLoc();
     MachineBasicBlock &MBB = *MI->getParent();
 
@@ -217,22 +217,22 @@ bool LC3InstrInfo::expandPostRAPseudo(MachineBasicBlock::iterator MI) const
 
     const MachineOperand &MO = MI->getOperand(1);
 
-    auto LO16 = BuildMI(MBB, MI, DL, get(LC3::MOVLOi16), DstReg);
-    auto HI16 = BuildMI(MBB, MI, DL, get(LC3::MOVHIi16))
+    auto LO8 = BuildMI(MBB, MI, DL, get(LC3::MOVLOi8), DstReg);
+    auto HI8 = BuildMI(MBB, MI, DL, get(LC3::MOVHIi8))
                     .addReg(DstReg, RegState::Define | getDeadRegState(DstIsDead))
                     .addReg(DstReg);
 
     if (MO.isImm()) {
       const unsigned Imm = MO.getImm();
-      const unsigned Lo16 = Imm & 0xffff;
-      const unsigned Hi16 = (Imm >> 16) & 0xffff;
-      LO16 = LO16.addImm(Lo16);
-      HI16 = HI16.addImm(Hi16);
+      const unsigned Lo8 = Imm & 0xff;
+      const unsigned Hi8 = (Imm >> 8) & 0xff;
+      LO8 = LO8.addImm(Lo8);
+      HI8 = HI8.addImm(Hi8);
     } else {
       const GlobalValue *GV = MO.getGlobal();
       const unsigned TF = MO.getTargetFlags();
-      LO16 = LO16.addGlobalAddress(GV, MO.getOffset(), TF | LC3II::MO_LO16);
-      HI16 = HI16.addGlobalAddress(GV, MO.getOffset(), TF | LC3II::MO_HI16);
+      LO8 = LO8.addGlobalAddress(GV, MO.getOffset(), TF | LC3II::MO_LO8);
+      HI8 = HI8.addGlobalAddress(GV, MO.getOffset(), TF | LC3II::MO_HI8);
     }
 
     MBB.erase(MI);
